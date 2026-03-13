@@ -14,4 +14,8 @@ class Utilisateur extends Model
         'matricule',
         'historique_emprunts'
     ];
+    public function emprunts()
+{
+    return $this->hasMany(Emprunt::class);
+}
 }

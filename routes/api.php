@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmpruntController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivreController;
@@ -21,6 +22,13 @@ Route::post('/users', [UtilisateurController::class,'store']);
 Route::get('/users/{id}', [UtilisateurController::class,'show']);
 Route::put('/users/{id}', [UtilisateurController::class,'update']);
 Route::delete('/users/{id}', [UtilisateurController::class,'destroy']);
+
+//CRUD emprunt
+Route::get('/emprunt', [EmpruntController::class,'index']);
+Route::post('/emprunt', [EmpruntController::class,'store']);
+Route::get('/emprunt/{id}', [EmpruntController::class,'show']);
+Route::put('/emprunt/{id}', [EmpruntController::class,'update']);
+Route::delete('/emprunt/{id}', [EmpruntController::class,'destroy']);
 
 
 

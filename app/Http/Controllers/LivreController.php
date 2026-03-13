@@ -46,7 +46,7 @@ class LivreController extends Controller
 
     $livre = Livre::create($data);
 
-    return response()->json($livre, 200);
+    return response()->json($livre, 201);
     }
 
     /**

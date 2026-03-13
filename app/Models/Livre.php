@@ -18,4 +18,9 @@ class Livre extends Model
         'statut',
         'nbr_emprunts'
     ];
+    // relation emprunt
+    public function emprunts()
+    {
+        return $this->hasMany(Emprunt::class,'livre_isbn','isbn');
+    }
 }

@@ -23,4 +23,8 @@ class Livre extends Model
     {
         return $this->hasMany(Emprunt::class,'livre_isbn','isbn');
     }
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class,'livre_isbn','isbn');
+    }
 }

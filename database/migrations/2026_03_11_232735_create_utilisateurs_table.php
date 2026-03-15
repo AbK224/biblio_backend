@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('prenom');
             $table->string('type');
             $table->string('matricule')->unique();
-            $table->json('historique_emprunts')->nullable();
             $table->timestamps();
         });
     }

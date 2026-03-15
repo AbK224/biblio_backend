@@ -11,11 +11,15 @@ class Utilisateur extends Model
         'nom',
         'prenom',
         'type',
-        'matricule',
-        'historique_emprunts'
+        'matricule'
     ];
     public function emprunts()
-{
-    return $this->hasMany(Emprunt::class);
-}
+    {
+        return $this->hasMany(Emprunt::class);
+    }
+    
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivreController;
 use App\Http\Controllers\UtilisateurController;
+use App\Http\Controllers\ReservationController;
 
 /* Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,6 +30,13 @@ Route::post('/emprunt', [EmpruntController::class,'store']);
 Route::get('/emprunt/{id}', [EmpruntController::class,'show']);
 Route::put('/emprunt/{id}', [EmpruntController::class,'update']);
 Route::delete('/emprunt/{id}', [EmpruntController::class,'destroy']);
+
+//CRUD Reservation
+Route::get('/reservation', [ReservationController::class,'index']);
+Route::post('/reservation', [ReservationController::class,'store']);
+Route::get('/reservation/{id}', [ReservationController::class,'show']);
+Route::put('/reservation/{id}', [ReservationController::class,'update']);
+Route::delete('/reservation/{id}', [ReservationController::class,'destroy']);
 
 
 

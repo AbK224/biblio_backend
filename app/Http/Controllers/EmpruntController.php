@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Emprunt;
+use App\Services\EmpruntService;
 use Illuminate\Http\Request;
+
 
 class EmpruntController extends Controller
 {
+    private $service;
+
+    public function __construct(EmpruntService $service)
+    {
+        $this->service = $service;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,17 +41,25 @@ class EmpruntController extends Controller
         $data = $request->validate([
         'utilisateur_id' => 'required|exists:utilisateurs,id',
         'livre_isbn' => 'required|exists:livres,isbn',
-        'date_emprunt' => 'required|date',
-        'date_retour_prevue' => 'required|date'
+        'date_emprunt' => 'required|date'
+        //'date_retour_prevue' => 'required|date'
 
     ]);
 
 
-        $emprunt = Emprunt::create($data);
-        //recharge les valeurs depuis la base
-        $emprunt -> refresh();
+    try {
 
-        return response()->json($emprunt, 201);
+        $emprunt = $this->service->creerEmprunt($data);
+
+        return response()->json($emprunt,201);
+
+    } catch(\Exception $e){
+
+        return response()->json([
+            "message"=>$e->getMessage()
+        ],400);
+
+    }
     }
 
     /**

@@ -127,8 +127,13 @@ class EmpruntController extends Controller
     public function destroy($id)
     {
         //
-        Emprunt::destroy($id);
-
+        $emprunt = Emprunt::find($id);
+        if (!$emprunt) {
+            return response()->json([
+                'message' => 'emprunt non trouvé'
+            ], 404);
+        }
+        $emprunt ->delete();
         return response()->json([
             "message" => "Emprunt supprimé"
         ]);

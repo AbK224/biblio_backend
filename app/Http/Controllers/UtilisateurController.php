@@ -11,16 +11,23 @@ class UtilisateurController extends Controller
     {
 
         $prefixes = [
-            'etudiant' => 'ETU',
-            'enseignant' => 'ENS',
-            'administratif' => 'ADM'
-        ];
+        'etudiant' => 'ETU',
+        'enseignant' => 'ENS',
+        'administratif' => 'ADM'
+    ];
 
-        $prefix = $prefixes[$type];
+    $prefix = $prefixes[$type];
 
-        $count = Utilisateur::where('type', $type)->count() + 1;
+    do {
 
-        return $prefix . '-' . str_pad($count, 5, '0', STR_PAD_LEFT);
+        // nombre aléatoire entre 00001 et 99999
+        $random = str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+
+        $matricule = $prefix . '-' . $random;
+
+        } while (Utilisateur::where('matricule', $matricule)->exists());
+
+    return $matricule;
     }
     /**
      * Display a listing of the resource.

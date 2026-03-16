@@ -57,6 +57,16 @@ class EmpruntService
         if($livre->exemplaires_disponible <= 0){
             throw new \Exception("Livre indisponible");
         }
+        // Empêcher double emprunt du même livre
+        $existe = Emprunt::where('utilisateur_id',$utilisateur->id)
+            ->where('livre_isbn',$livre->isbn)
+            ->where('statut','en cours')
+            ->exists();
+
+        if($existe){
+            throw new \Exception("Vous avez déjà emprunté ce livre");
+        }
+
         // nombre d'emprunts en cours
         $empruntsEnCours = Emprunt::where('utilisateur_id',$utilisateur->id)
             ->where('statut','en cours')
@@ -67,13 +77,13 @@ class EmpruntService
         if($empruntsEnCours >= $limite){
             throw new Exception("Limite d'emprunts atteinte");
         }
-
+        // calcul du nbre de jrs en fonction du type de l'utilsateur
         $jours = $this->dureeEmprunt($utilisateur->type);
 
         $dateEmprunt = Carbon::parse($data['date_emprunt']);
 
         $dateRetour = $dateEmprunt->copy()->addDays($jours);
-
+        // crée l'emprunt après toutes les verifications
         $emprunt = Emprunt::create([
             'utilisateur_id' => $utilisateur->id,
             'livre_isbn' => $livre->isbn,
@@ -81,8 +91,11 @@ class EmpruntService
             'date_retour_prevue' => $dateRetour,
             'statut' => 'en cours'
         ]);
-
+        // diminuer les exemplaires
         $livre->decrement('exemplaires_disponible');
+
+        // augmenter nombre emprunts
+        $livre->increment('nbr_emprunts');
         return $emprunt;
     }
 
@@ -101,10 +114,10 @@ class EmpruntService
         $livre = Livre::where('isbn',$emprunt->livre_isbn)->first();
 
         $emprunt->statut = 'retourné';
-        $emprunt->date_retour_effective = now();
         $emprunt->save();
 
         $livre->exemplaires_disponible += 1;
+        $livre->nbr_emprunts -= 1;
         $livre->save();
 
         return $emprunt;

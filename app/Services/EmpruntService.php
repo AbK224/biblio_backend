@@ -93,6 +93,10 @@ class EmpruntService
         ]);
         // diminuer les exemplaires
         $livre->decrement('exemplaires_disponible');
+        if($livre->exemplaires_disponible == 0){
+            $livre->statut = 'indisponible';
+            $livre->save();
+        }
 
         // augmenter nombre emprunts
         $livre->increment('nbr_emprunts');
@@ -116,8 +120,12 @@ class EmpruntService
         $emprunt->statut = 'retourné';
         $emprunt->save();
 
-        $livre->exemplaires_disponible += 1;
-        $livre->nbr_emprunts -= 1;
+        $livre->increment('exemplaires_disponible');
+        if($livre->exemplaires_disponible > 0){
+            $livre->statut = 'disponible';
+            $livre->save();
+        }
+        $livre->decrement('nbr_emprunts');
         $livre->save();
 
         return $emprunt;

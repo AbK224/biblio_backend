@@ -86,18 +86,38 @@ class EmpruntController extends Controller
     public function update(Request $request,$id)
     {
         //
-        $emprunt = Emprunt::find($id);
-        if (!$emprunt) {
-            return response()->json([
-                'message' => 'emprunt non trouvé'
-            ], 404);
+        $data = $request->validate([
+        'utilisateur_id' => 'sometimes | integer',
+        'date_emprunt' => 'sometimes|date',
+        'date_retour_prevue' => 'sometimes|date',
+        'date_retour_effective' => 'sometimes|date',
+        'statut' => 'sometimes|string',
+        'renouvellements' => 'sometimes|integer'
+    ]);
+
+    try {
+
+        $emprunt = Emprunt::findOrFail($id);
+        // si le statut devient "retourné"
+        if(isset($data['statut']) && $data['statut'] === 'retourné'){
+
+            $emprunt = $this->service->retournerLivre($id);
+        } else {
+
+            $emprunt->update($data);
         }
-        $emprunt->update($request->all());
 
         return response()->json([
-            'message' => 'emprunt mis à jour',
+            'message' => 'Emprunt mis à jour',
             'data' => $emprunt
         ]);
+
+    } catch(\Exception $e){
+
+        return response()->json([
+            "message"=>$e->getMessage()
+        ],400);
+    }
 
     }
 

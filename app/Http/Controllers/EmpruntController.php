@@ -83,42 +83,29 @@ class EmpruntController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        //
         $data = $request->validate([
-        'utilisateur_id' => 'sometimes | integer',
-        'date_emprunt' => 'sometimes|date',
-        'date_retour_prevue' => 'sometimes|date',
-        'date_retour_effective' => 'sometimes|date',
-        'statut' => 'sometimes|string',
-        'renouvellements' => 'sometimes|integer'
-    ]);
-
-    try {
-
-        $emprunt = Emprunt::findOrFail($id);
-        // si le statut devient "retourné"
-        if(isset($data['statut']) && $data['statut'] === 'retourné'){
-
-            $emprunt = $this->service->retournerLivre($id);
-        } else {
-
-            $emprunt->update($data);
-        }
-
-        return response()->json([
-            'message' => 'Emprunt mis à jour',
-            'data' => $emprunt
+            'utilisateur_id' => 'sometimes|exists:utilisateurs,id',
+            'livre_isbn' => 'sometimes|exists:livres,isbn',
+            'date_emprunt' => 'sometimes|date',
+            'date_retour_effective' => 'sometimes|date',
+            'statut' => 'sometimes|string',
+            'renouvellements' => 'sometimes|integer'
         ]);
 
-    } catch(\Exception $e){
+        try {
+            $emprunt = $this->service->modifierEmprunt($id, $data);
 
-        return response()->json([
-            "message"=>$e->getMessage()
-        ],400);
-    }
-
+            return response()->json([
+                'message' => 'Emprunt mis à jour',
+                'data' => $emprunt
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     /**

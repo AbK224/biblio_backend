@@ -170,7 +170,7 @@ class EmpruntService
         // Mise à jour de l'emprunt
         $emprunt->update([
             'statut' => 'retourné',
-            'date_retour_effective' => Carbon::now(),
+            'date_retour_effective' => now(),
         ]);
 
         // Remise en stock du livre

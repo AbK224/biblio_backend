@@ -28,7 +28,7 @@ return new class extends Migration
 
             $table->integer('renouvellements')->default(0);
 
-            $table->enum('statut', ['en cours', 'retourné', 'retard', 'perdu'])
+            $table->enum('statut', ['en cours', 'retourné', 'perdu'])
                   ->default('en cours');
             $table->timestamps();
         });

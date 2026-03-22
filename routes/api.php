@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivreController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\StatsController;
 
 /* Route::get('/user', function (Request $request) {
     return $request->user();
@@ -37,6 +38,9 @@ Route::post('/reservation', [ReservationController::class,'store']);
 Route::get('/reservation/{id}', [ReservationController::class,'show']);
 Route::put('/reservation/{id}', [ReservationController::class,'update']);
 Route::delete('/reservation/{id}', [ReservationController::class,'destroy']);
+
+// Stastiques
+Route::get('/stats', [StatsController::class, 'index']);
 
 
 
